@@ -1,0 +1,6 @@
+{
+  // your bing API key. Sorry, you have to provide your own.
+  "bing_api_key": "",
+  // the number of results shown in the dropdown
+  "multiple_count": 10   
+}

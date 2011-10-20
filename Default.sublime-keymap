@@ -1,0 +1,4 @@
+[
+  { "keys": ["ctrl+shift+d"], "command": "anchorman", "args" : { "multiple" : false} },
+  { "keys": ["ctrl+shift+m"], "command": "anchorman", "args" : { "multiple" : true} }
+]

@@ -6,7 +6,6 @@ from urllib import urlopen
 class AnchormanCommand(sublime_plugin.TextCommand):
   def run(self, edit, multiple):
     self.items = []
-    self.edit = edit
     self.originalQuery = ""
 
     s = sublime.load_settings("anchorman.sublime-settings")
@@ -49,6 +48,7 @@ class AnchormanCommand(sublime_plugin.TextCommand):
     self.writeLink(self.items[index][1], self.originalQuery)
 
   def writeLink(self, resulturl, originalquery):
+    edit = self.view.begin_edit()
     start = self.region.begin()
     end = self.region.end()
     part1 = "<a href=\""+resulturl+"\">"
@@ -58,9 +58,11 @@ class AnchormanCommand(sublime_plugin.TextCommand):
     markstart = start + len(part1)
     markend = markstart + len(part2)
 
-    self.view.replace(self.edit, self.region, anchor)
+    self.view.replace(edit, self.region, anchor)
     self.view.sel().clear()
     self.view.sel().add(sublime.Region(markstart, markend))
+
+    self.view.end_edit(edit)
 
   def cleanQuery(self, query):
     query = query.replace(" ", "+")

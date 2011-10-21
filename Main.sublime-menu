@@ -1,0 +1,16 @@
+[
+    {
+        "id": "tools",
+        "children":
+        [
+            {
+                "caption": "Anchorman",
+                "children":
+                [
+                    { "caption": "Get Link", "command": "anchorman", "args" : { "multiple" : false} },
+                    { "caption": "Get Link (multiple choice)", "command": "anchorman", "args" : { "multiple" : true} }
+                ]
+            }
+        ]
+    }
+]

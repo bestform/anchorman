@@ -1,7 +1,7 @@
 import sublime
 import sublime_plugin
 import json
-from urllib import urlopen
+from urllib import urlopen, quote
 
 class AnchormanCommand(sublime_plugin.TextCommand):
   def run(self, edit, multiple):
@@ -17,7 +17,7 @@ class AnchormanCommand(sublime_plugin.TextCommand):
     if multiple:
       count = s.get('multiple_count')
     
-    baseurl = "http://api.bing.net/json.aspx?AppId="+bingAppID+"&Version=2.2&Market=en-US&Sources=web&Web.Count="+str(count)+"&JsonType=raw&Query="
+    baseurl = "http://api.bing.net/json.aspx?AppId="+bingAppID+"&Version=2.2&Sources=web&Web.Count="+str(count)+"&JsonType=raw&Query="
 
     # for now we only work with the first selected region. multiple region support might come later, if i feel like it
     self.region = self.view.sel()[0]
@@ -27,7 +27,7 @@ class AnchormanCommand(sublime_plugin.TextCommand):
     
     self.originalQuery = self.view.substr(self.region)
     query = self.cleanQuery(self.originalQuery)
-    url = baseurl + query
+    url = baseurl + quote(query.encode("utf-8"))
     result = urlopen(url).read()
     # no error handling at this point. we trust microsoft. i for one welcome our new api overlords.
     jsonresult = json.loads(result)

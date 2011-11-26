@@ -8,7 +8,8 @@
                 "children":
                 [
                     { "caption": "Get Link", "command": "anchorman", "args" : { "multiple" : false} },
-                    { "caption": "Get Link (multiple choice)", "command": "anchorman", "args" : { "multiple" : true} }
+                    { "caption": "Get Link (multiple choice)", "command": "anchorman", "args" : { "multiple" : true} },
+                    { "caption": "Make Link from URL", "command": "anchorman_link" }
                 ]
             }
         ]

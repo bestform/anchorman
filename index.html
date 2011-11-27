@@ -73,6 +73,8 @@ The plugin also comes with a handy snippet, triggered by &lt;a[TAB]. Try it out.
       <p>For the search function to work, you'll have to provide your own <a href="http://www.bing.com/">bing</a> (yes, THAT bing, don't ask) API key in an anchorman.sublime-settings file in your user dir.</p>
     
 
+      <h2>Tests</h2>
+      <p>Due to popular demand (read: @kelloggsFrost), I've added the foundation for unit tests and a first test. The seemingly strange init() method in testEnv.py is needed so sublime text doesn't overwrite its own modules when loading the anchorman plugin. You can use the testEnv.py file for your own tests, as it already mocks a few common functions of the sublime environment. By mocking, the tests can run outside sublime text or with the build-system inside sublime text (where the sublime modules aren't available either)</p>
     
       <h2>License</h2>
       <p><a href="http://de.wikipedia.org/wiki/Beerware">Beerware</a></p>

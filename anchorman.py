@@ -3,22 +3,14 @@ import sublime_plugin
 import json
 from urllib2 import urlopen, quote, Request
 import re
+from bs4 import BeautifulSoup
 
 class AnchormanCommand(sublime_plugin.TextCommand):
   def run(self, edit, multiple):
     self.items = []
     self.originalQuery = ""
-
-    s = sublime.load_settings("anchorman.sublime-settings")
-    bingAppID = s.get('bing_api_key')
-    if not bingAppID or bingAppID == "":
-      sublime.error_message("Please provide a 'bing_api_key' in an anchorman.sublime-settings file in your user dir")
-      return
-    count = 1
-    if multiple:
-      count = s.get('multiple_count')
     
-    baseurl = "http://api.bing.net/json.aspx?AppId="+bingAppID+"&Version=2.2&Sources=web&Web.Count="+str(count)+"&JsonType=raw&Query="
+    baseurl = "http://duckduckgo.com/html/?q="
 
     # for now we only work with the first selected region. multiple region support might come later, if i feel like it
     self.region = self.view.sel()[0]
@@ -29,18 +21,20 @@ class AnchormanCommand(sublime_plugin.TextCommand):
     self.originalQuery = self.view.substr(self.region)
     query = Utils.cleanQuery(self.originalQuery)
     url = baseurl + quote(query.encode("utf-8"))
-    result = urlopen(url).read()
-    # no error handling at this point. we trust microsoft. i for one welcome our new api overlords.
-    jsonresult = json.loads(result)
-    results = jsonresult["SearchResponse"]["Web"]["Results"]
-    if len(results) == 0:
+    result = urlopen(url).read()    
+    soup = BeautifulSoup(result)
+    links = soup.find_all("a", "large")
+    linkRegEx = re.compile("<a.*?href=\"(.*?)\"", re.I|re.M)
+    parsed_links = [(link['href']," ".join([string for string in link.stripped_strings])) for link in links]
+
+    if len(parsed_links) == 0:
       return
     if not multiple:
-      resulturl = results[0]["Url"]
+      resulturl = results[0][0]
       Utils.writeLink(self, resulturl, self.originalQuery)
       return
-    for i in range(0, min(len(results), count)):
-      self.items.append([results[i]["Title"], results[i]["Url"]])
+    for entry in parsed_links:
+      self.items.append([entry[1], entry[0]])
     self.view.window().show_quick_panel(self.items, self.panelDone, sublime.MONOSPACE_FONT)
 
   def panelDone(self, index):
